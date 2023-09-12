@@ -1,9 +1,7 @@
 package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
-import com.Amaya.ForoAlura.domain.DatosListadoTopico;
-import com.Amaya.ForoAlura.domain.DatosRegistroTopico;
-import com.Amaya.ForoAlura.domain.Topico;
+import com.Amaya.ForoAlura.domain.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +63,34 @@ public class TopicoController {
 
         return ResponseEntity.ok(DatosTopico);
 
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity ActualizarTopico(@RequestBody @Valid DatosActualizaTopico datosActualizaTopico) {
+
+        String titulo = topicoRepository.SeleccionarPorTitulo(datosActualizaTopico.titulo());
+
+        String mensaje = topicoRepository.SeleccionarPorMensaje(datosActualizaTopico.mensaje());
+
+        if ( datosActualizaTopico.titulo() != null && datosActualizaTopico.mensaje() != null &&
+                datosActualizaTopico.titulo().equals(titulo) && datosActualizaTopico.mensaje().equals(mensaje)) {
+
+            return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, " +
+                    "por favor modificalo");
+
+        } else {
+
+            Topico topico = topicoRepository.getReferenceById(datosActualizaTopico.id());
+
+            topico.actualizarDatos(datosActualizaTopico);
+
+            DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico.getId(), topico.getTitulo(),
+                    topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(),
+                    topico.getCurso());
+
+            return ResponseEntity.ok(datosRespuestaTopico);
+        }
     }
 }
 

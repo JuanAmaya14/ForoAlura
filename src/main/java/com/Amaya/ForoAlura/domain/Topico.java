@@ -27,7 +27,7 @@ public class Topico {
 
     private Date fechaCreacion;
 
-    private String estatus;
+    private Boolean estatus;
 
     private String autor;
 
@@ -37,8 +37,36 @@ public class Topico {
         this.titulo = datosRegistroTopico.titulo();
         this.mensaje = datosRegistroTopico.mensaje();
         this.fechaCreacion = Date.from(Instant.now());
-        this.estatus = datosRegistroTopico.estatus();
+        this.estatus = true;
         this.autor = datosRegistroTopico.autor();
         this.curso = datosRegistroTopico.curso();
+    }
+
+    public void actualizarDatos(DatosActualizaTopico datosActualizaTopico) {
+
+        if (datosActualizaTopico.titulo() != null) {
+
+            this.titulo = datosActualizaTopico.titulo();
+
+        }
+
+        if (datosActualizaTopico.mensaje() != null) {
+
+            this.mensaje = datosActualizaTopico.mensaje();
+
+        }
+
+        if (datosActualizaTopico.autor() != null) {
+
+            this.autor = datosActualizaTopico.autor();
+
+        }
+
+        if (datosActualizaTopico.curso() != null) {
+
+            this.curso = datosActualizaTopico.curso();
+
+        }
+
     }
 }

@@ -1,21 +1,19 @@
 package com.Amaya.ForoAlura.domain;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record DatosRegistroTopico (
+public record DatosActualizaTopico(
 
-        @NotBlank
+        @NotNull
+        long id,
+
         String titulo,
 
-        @NotBlank
         String mensaje,
 
-        @NotBlank
         String autor,
 
-        @NotBlank
         String curso
 
-){
+) {
 }
