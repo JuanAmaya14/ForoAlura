@@ -8,13 +8,11 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/topicos")
@@ -41,13 +39,32 @@ public class TopicoController {
 
             Topico topico = topicoRepository.save(new Topico(datosRegistroTopico));
 
-            DatosListadoTopico datosListadoTopico = new DatosListadoTopico(topico.getId(), topico.getTitulo(),
+            DatosListadoTopico datosListadoTopico = new DatosListadoTopico(topico.getTitulo(),
                     topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(),
                     topico.getCurso());
 
             URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
             return ResponseEntity.created(uri).body(datosListadoTopico);
         }
+    }
+
+    @GetMapping
+    public List<Topico> ListarTopicos() {
+
+        return topicoRepository.findAll();
+
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<DatosListadoTopico> ListarTopicoPorId(@PathVariable long id) {
+
+        Topico topico = topicoRepository.getReferenceById(id);
+
+        var DatosTopico = new DatosListadoTopico(topico.getTitulo(), topico.getMensaje(),
+                topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(), topico.getCurso());
+
+        return ResponseEntity.ok(DatosTopico);
+
     }
 }
 
