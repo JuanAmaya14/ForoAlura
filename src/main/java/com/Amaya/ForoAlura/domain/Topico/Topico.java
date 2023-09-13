@@ -1,4 +1,4 @@
-package com.Amaya.ForoAlura.domain;
+package com.Amaya.ForoAlura.domain.Topico;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -67,6 +67,12 @@ public class Topico {
             this.curso = datosActualizaTopico.curso();
 
         }
+
+    }
+
+    public void Deshabilitar() {
+
+        this.estatus = false;
 
     }
 }

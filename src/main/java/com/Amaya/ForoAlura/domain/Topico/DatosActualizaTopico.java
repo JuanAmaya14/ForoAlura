@@ -1,4 +1,4 @@
-package com.Amaya.ForoAlura.domain;
+package com.Amaya.ForoAlura.domain.Topico;
 
 import jakarta.validation.constraints.NotNull;
 

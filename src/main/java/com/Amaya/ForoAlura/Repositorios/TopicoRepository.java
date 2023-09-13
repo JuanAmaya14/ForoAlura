@@ -1,6 +1,6 @@
 package com.Amaya.ForoAlura.Repositorios;
 
-import com.Amaya.ForoAlura.domain.Topico;
+import com.Amaya.ForoAlura.domain.Topico.Topico;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

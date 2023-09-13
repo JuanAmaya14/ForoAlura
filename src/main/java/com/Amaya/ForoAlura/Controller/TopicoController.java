@@ -1,7 +1,7 @@
 package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
-import com.Amaya.ForoAlura.domain.*;
+import com.Amaya.ForoAlura.domain.Topico.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +91,29 @@ public class TopicoController {
 
             return ResponseEntity.ok(datosRespuestaTopico);
         }
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity EliminarTopico(@PathVariable long id){
+
+        topicoRepository.deleteById(id);
+
+        return ResponseEntity.ok("El topico con el id: " + id + " fue eliminado");
+
+    }
+
+
+    @PutMapping("/deshabilitar/{id}")
+    @Transactional
+    public ResponseEntity deshabilitarTopico(@PathVariable long id){
+
+        Topico topico = topicoRepository.getReferenceById(id);
+
+        topico.Deshabilitar();
+
+        return ResponseEntity.ok("El topico con el id: " + id + " fue deshabilitado");
+
     }
 }
 
