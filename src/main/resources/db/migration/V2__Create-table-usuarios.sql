@@ -1,0 +1,10 @@
+CREATE TABLE usuarios (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nombre VARCHAR(50) NOT NULL,
+  correo VARCHAR(100) NOT NULL,
+  contrasenha VARCHAR(200) NOT NULL,
+  fecha_creacion DATE NOT NULL,
+  baneado BOOLEAN NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE,
+  UNIQUE INDEX correo_UNIQUE (correo ASC) VISIBLE);

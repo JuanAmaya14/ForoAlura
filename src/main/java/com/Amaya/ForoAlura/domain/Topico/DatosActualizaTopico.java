@@ -4,14 +4,12 @@ import jakarta.validation.constraints.NotNull;
 
 public record DatosActualizaTopico(
 
-        @NotNull
+        @NotNull(message = "El id no puede ser vacio")
         long id,
 
         String titulo,
 
         String mensaje,
-
-        String autor,
 
         String curso
 

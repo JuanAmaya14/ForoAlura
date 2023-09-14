@@ -29,7 +29,7 @@ public class Topico {
 
     private Boolean estatus;
 
-    private String autor;
+    private long autor;
 
     private String curso;
 
@@ -53,12 +53,6 @@ public class Topico {
         if (datosActualizaTopico.mensaje() != null) {
 
             this.mensaje = datosActualizaTopico.mensaje();
-
-        }
-
-        if (datosActualizaTopico.autor() != null) {
-
-            this.autor = datosActualizaTopico.autor();
 
         }
 

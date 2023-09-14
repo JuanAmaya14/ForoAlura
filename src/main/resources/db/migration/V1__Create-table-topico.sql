@@ -4,7 +4,7 @@ CREATE TABLE topicos (
   mensaje LONGTEXT NOT NULL,
   fecha_creacion DATE NOT NULL,
   estatus VARCHAR(50) NOT NULL,
-  autor VARCHAR(60) NOT NULL,
-  curso VARCHAR(45) NOT NULL,
+  autor BIGINT NOT NULL,
+  curso BOOLEAN NOT NULL,
   PRIMARY KEY (id),
   UNIQUE INDEX id_UNIQUE (id ASC) VISIBLE);

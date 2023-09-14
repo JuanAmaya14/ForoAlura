@@ -13,7 +13,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/topicos")
+@RequestMapping("/topico")
 public class TopicoController {
 
     @Autowired
@@ -37,12 +37,12 @@ public class TopicoController {
 
             Topico topico = topicoRepository.save(new Topico(datosRegistroTopico));
 
-            DatosListadoTopico datosListadoTopico = new DatosListadoTopico(topico.getTitulo(),
+            DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico.getId(), topico.getTitulo(),
                     topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(),
                     topico.getCurso());
 
-            URI uri = uriComponentsBuilder.path("/topicos/{id}").buildAndExpand(topico.getId()).toUri();
-            return ResponseEntity.created(uri).body(datosListadoTopico);
+            URI uri = uriComponentsBuilder.path("/topico/{id}").buildAndExpand(topico.getId()).toUri();
+            return ResponseEntity.created(uri).body(datosRespuestaTopico);
         }
     }
 
