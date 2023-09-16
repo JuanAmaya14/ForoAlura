@@ -2,7 +2,7 @@ package com.Amaya.ForoAlura.domain.Topico;
 
 import jakarta.validation.constraints.NotNull;
 
-public record DatosActualizaTopico(
+public record DatosActualizarTopico(
 
         @NotNull(message = "El id no puede ser vacio")
         long id,

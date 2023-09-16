@@ -55,7 +55,7 @@ public class UsuarioController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity modificarUsuario(@RequestBody DatosActualizarUsuario datosActualizarUsuario){
+    public ResponseEntity modificarUsuario(@RequestBody DatosActualizarUsuario datosActualizarUsuario) {
 
         Usuario usuario = usuarioRepository.getReferenceById(datosActualizarUsuario.id());
 
@@ -71,7 +71,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity eliminarUsuario(@PathVariable long id){
+    public ResponseEntity eliminarUsuario(@PathVariable long id) {
 
         usuarioRepository.deleteById(id);
 
@@ -81,7 +81,7 @@ public class UsuarioController {
 
     @DeleteMapping("/banear/{id}")
     @Transactional
-    public ResponseEntity BanearUsuario(@PathVariable long id){
+    public ResponseEntity BanearUsuario(@PathVariable long id) {
 
         Usuario usuario = usuarioRepository.getReferenceById(id);
 

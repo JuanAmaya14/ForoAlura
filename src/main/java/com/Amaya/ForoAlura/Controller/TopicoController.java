@@ -67,23 +67,23 @@ public class TopicoController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity ActualizarTopico(@RequestBody @Valid DatosActualizaTopico datosActualizaTopico) {
+    public ResponseEntity ActualizarTopico(@RequestBody @Valid DatosActualizarTopico datosActualizarTopico) {
 
-        String titulo = topicoRepository.SeleccionarPorTitulo(datosActualizaTopico.titulo());
+        String titulo = topicoRepository.SeleccionarPorTitulo(datosActualizarTopico.titulo());
 
-        String mensaje = topicoRepository.SeleccionarPorMensaje(datosActualizaTopico.mensaje());
+        String mensaje = topicoRepository.SeleccionarPorMensaje(datosActualizarTopico.mensaje());
 
-        if ( datosActualizaTopico.titulo() != null && datosActualizaTopico.mensaje() != null &&
-                datosActualizaTopico.titulo().equals(titulo) && datosActualizaTopico.mensaje().equals(mensaje)) {
+        if ( datosActualizarTopico.titulo() != null && datosActualizarTopico.mensaje() != null &&
+                datosActualizarTopico.titulo().equals(titulo) && datosActualizarTopico.mensaje().equals(mensaje)) {
 
             return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, " +
                     "por favor modificalo");
 
         } else {
 
-            Topico topico = topicoRepository.getReferenceById(datosActualizaTopico.id());
+            Topico topico = topicoRepository.getReferenceById(datosActualizarTopico.id());
 
-            topico.actualizarDatos(datosActualizaTopico);
+            topico.actualizarDatos(datosActualizarTopico);
 
             DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico.getId(), topico.getTitulo(),
                     topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(),

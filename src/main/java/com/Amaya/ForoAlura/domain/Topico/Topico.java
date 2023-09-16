@@ -42,23 +42,23 @@ public class Topico {
         this.curso = datosRegistroTopico.curso();
     }
 
-    public void actualizarDatos(DatosActualizaTopico datosActualizaTopico) {
+    public void actualizarDatos(DatosActualizarTopico datosActualizarTopico) {
 
-        if (datosActualizaTopico.titulo() != null) {
+        if (datosActualizarTopico.titulo() != null) {
 
-            this.titulo = datosActualizaTopico.titulo();
-
-        }
-
-        if (datosActualizaTopico.mensaje() != null) {
-
-            this.mensaje = datosActualizaTopico.mensaje();
+            this.titulo = datosActualizarTopico.titulo();
 
         }
 
-        if (datosActualizaTopico.curso() != null) {
+        if (datosActualizarTopico.mensaje() != null) {
 
-            this.curso = datosActualizaTopico.curso();
+            this.mensaje = datosActualizarTopico.mensaje();
+
+        }
+
+        if (datosActualizarTopico.curso() != null) {
+
+            this.curso = datosActualizarTopico.curso();
 
         }
 
