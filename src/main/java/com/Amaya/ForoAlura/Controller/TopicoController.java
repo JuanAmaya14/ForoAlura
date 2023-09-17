@@ -1,6 +1,9 @@
 package com.Amaya.ForoAlura.Controller;
 
+import com.Amaya.ForoAlura.Repositorios.RespuestaRepository;
 import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
+import com.Amaya.ForoAlura.domain.Respuestas.DatosListadoRespuesta;
+import com.Amaya.ForoAlura.domain.Respuestas.Respuesta;
 import com.Amaya.ForoAlura.domain.Topico.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,6 +22,9 @@ public class TopicoController {
 
     @Autowired
     private TopicoRepository topicoRepository;
+
+    @Autowired
+    private RespuestaRepository respuestaRepository;
 
 
     @PostMapping
@@ -58,10 +65,13 @@ public class TopicoController {
 
         Topico topico = topicoRepository.getReferenceById(id);
 
-        var DatosTopico = new DatosListadoTopico(topico.getTitulo(), topico.getMensaje(),
-                topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(), topico.getCurso());
+        ArrayList<Respuesta> respuestas = respuestaRepository.taerDatosPorIdTopico(topico.getId());
 
-        return ResponseEntity.ok(DatosTopico);
+        var datosTopico = new DatosListadoTopico(topico.getTitulo(), topico.getMensaje(),
+                topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(), topico.getCurso(),
+                respuestas);
+
+        return ResponseEntity.ok(datosTopico);
 
     }
 
@@ -115,5 +125,7 @@ public class TopicoController {
         return ResponseEntity.ok("El topico con el id: " + id + " fue deshabilitado");
 
     }
+
+
 }
 

@@ -31,8 +31,12 @@ public class RespuestaController {
 
         Respuesta respuesta = respuestaRepository.getReferenceById(id);
 
+        String titulo = respuestaRepository.tituloTopicoPorId(respuesta.getIdTopico());
+
+        String autor = respuestaRepository.autorRespuestaPorId(respuesta.getIdAutor());
+
         DatosListadoRespuesta datosListadoRespuesta = new DatosListadoRespuesta(respuesta.getMensajeRespuesta(),
-                respuesta.getFechaRespuesta().toString(), respuesta.getIdTopico(), respuesta.getIdAutor());
+                respuesta.getFechaRespuesta().toString(), titulo, autor);
 
         return ResponseEntity.ok(datosListadoRespuesta);
 
@@ -82,6 +86,5 @@ public class RespuestaController {
         return ResponseEntity.ok("La respuesta con el id " + id + " fue eliminado con exito");
 
     }
-
 
 }
