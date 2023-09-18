@@ -1,7 +1,9 @@
-package com.Amaya.ForoAlura.infra;
+package com.Amaya.ForoAlura.infra.Errores;
 
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +24,15 @@ public class Errores {
     public ResponseEntity badRequestModificarCorreo(ConstraintViolationException  e){
 
         return ResponseEntity.badRequest().body(e.getConstraintViolations().toString());
+
+    }
+
+    @ExceptionHandler(BeanCreationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public void errorDeMierda(BeanCreationException e){
+
+        System.out.println(("ERROR DE MIERDA \n" +
+                e.getMessage()));
 
     }
 

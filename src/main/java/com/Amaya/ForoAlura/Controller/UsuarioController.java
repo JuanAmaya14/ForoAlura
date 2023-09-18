@@ -6,25 +6,33 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
+@EnableWebSecurity
 public class UsuarioController {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @PostMapping
+    @PostMapping("/registro")
     @Transactional
     public ResponseEntity RegistrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario,
                                            UriComponentsBuilder uriComponentsBuilder) {
 
-        Usuario usuario = usuarioRepository.save(new Usuario(datosRegistroUsuario));
+        String contrasenha = passwordEncoder.encode(datosRegistroUsuario.contrasenha());
+
+        Usuario usuario = usuarioRepository.save(new Usuario(datosRegistroUsuario, contrasenha));
 
         DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario.getId(), usuario.getNombre(),
                 usuario.getCorreo(), usuario.getContrasenha(), usuario.getFechaCreacion().toString(), usuario.getBaneado());
@@ -53,13 +61,15 @@ public class UsuarioController {
 
     }
 
-    @PutMapping
+    @PutMapping("/actualizar")
     @Transactional
     public ResponseEntity modificarUsuario(@RequestBody DatosActualizarUsuario datosActualizarUsuario) {
 
         Usuario usuario = usuarioRepository.getReferenceById(datosActualizarUsuario.id());
 
-        usuario.modificarDatos(datosActualizarUsuario);
+        String contrasenha = passwordEncoder.encode(datosActualizarUsuario.contrasenha());
+
+        usuario.modificarDatos(datosActualizarUsuario, contrasenha);
 
         DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario.getId(),
                 usuario.getNombre(), usuario.getCorreo(), usuario.getContrasenha(),

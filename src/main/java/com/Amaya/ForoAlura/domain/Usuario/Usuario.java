@@ -2,13 +2,22 @@ package com.Amaya.ForoAlura.domain.Usuario;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.beans.BeanProperty;
 import java.time.Instant;
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "usuarios")
 @Entity(name = "Usuario")
@@ -16,7 +25,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,15 +42,15 @@ public class Usuario {
 
     private Boolean baneado;
 
-    public Usuario(DatosRegistroUsuario datosRegistroUsuario) {
+    public Usuario(DatosRegistroUsuario datosRegistroUsuario, String contrasenha) {
         this.nombre = datosRegistroUsuario.nombre();
         this.correo = datosRegistroUsuario.correo();
-        this.contrasenha = datosRegistroUsuario.contrasenha();
+        this.contrasenha = contrasenha;
         this.fechaCreacion = Date.from(Instant.now());
         this.baneado = false;
     }
 
-    public void modificarDatos(DatosActualizarUsuario datosActualizarUsuario) {
+    public void modificarDatos(DatosActualizarUsuario datosActualizarUsuario, String contrasenha) {
 
         if (datosActualizarUsuario.nombre() != null) {
 
@@ -57,7 +66,7 @@ public class Usuario {
 
         if(datosActualizarUsuario.contrasenha() != null){
 
-            this.contrasenha = datosActualizarUsuario.contrasenha();
+            this.contrasenha = contrasenha;
 
         }
     }
@@ -66,5 +75,40 @@ public class Usuario {
 
         this.baneado = true;
 
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return contrasenha;
+    }
+
+    @Override
+    public String getUsername() {
+        return correo;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
