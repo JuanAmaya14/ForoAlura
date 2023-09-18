@@ -27,13 +27,4 @@ public class Errores {
 
     }
 
-    @ExceptionHandler(BeanCreationException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public void errorDeMierda(BeanCreationException e){
-
-        System.out.println(("ERROR DE MIERDA \n" +
-                e.getMessage()));
-
-    }
-
 }
