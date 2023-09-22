@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+//Repositorio de topico
 @Repository
 public interface TopicoRepository extends JpaRepository<Topico, Long> {
 
@@ -17,4 +18,9 @@ public interface TopicoRepository extends JpaRepository<Topico, Long> {
             select m.mensaje from Topico m where m.mensaje=:mensaje
             """)
     String SeleccionarPorMensaje(String mensaje);
+
+    @Query("""
+            select e.estatus from Topico e where e.id=:idTopico
+            """)
+    Boolean estaDeshabilitado(long idTopico);
 }

@@ -25,6 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
+@ToString
 public class Usuario implements UserDetails {
 
     @Id
@@ -48,6 +49,16 @@ public class Usuario implements UserDetails {
         this.contrasenha = contrasenha;
         this.fechaCreacion = Date.from(Instant.now());
         this.baneado = false;
+    }
+
+    public Usuario(DatosRegistroUsuario datosRegistroUsuario) {
+
+        this.nombre = datosRegistroUsuario.nombre();
+        this.correo = datosRegistroUsuario.correo();
+        this.contrasenha = datosRegistroUsuario.contrasenha();
+        this.fechaCreacion = Date.from(Instant.now());
+        this.baneado = false;
+
     }
 
     public void modificarDatos(DatosActualizarUsuario datosActualizarUsuario, String contrasenha) {
@@ -75,6 +86,11 @@ public class Usuario implements UserDetails {
 
         this.baneado = true;
 
+    }
+
+    public void DesbanearUsuario() {
+
+        this.baneado = false;
     }
 
     @Override
@@ -111,4 +127,5 @@ public class Usuario implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

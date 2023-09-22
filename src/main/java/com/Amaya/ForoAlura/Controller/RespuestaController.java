@@ -1,7 +1,11 @@
 package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.RespuestaRepository;
+import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
 import com.Amaya.ForoAlura.domain.Respuestas.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +18,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/respuesta")
+@SecurityRequirement(name = "bearer-key")
+@Tag(name = "Respuesta a topico")
 public class RespuestaController {
 
     @Autowired
     private RespuestaRepository respuestaRepository;
 
+    @Autowired
+    private TopicoRepository topicoRepository;
+
     @GetMapping
+    @Operation(summary = "Devuelve todas las respuestas que existen")
     public List<Respuesta> listarRespuestas() {
 
         return respuestaRepository.findAll();
@@ -27,6 +37,7 @@ public class RespuestaController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Devuelve una respeusta por el id")
     public ResponseEntity<DatosListadoRespuesta> listarRespuestas(@PathVariable long id) {
 
         Respuesta respuesta = respuestaRepository.getReferenceById(id);
@@ -44,17 +55,29 @@ public class RespuestaController {
 
     @PostMapping
     @Transactional
+    @Operation(summary = "Registra una respuesta")
     public ResponseEntity registrarRespuesta(@RequestBody @Valid DatosRegistroRespuesta datosRegistroRespuesta,
                                              UriComponentsBuilder uriComponentsBuilder) {
 
-        Respuesta respuesta = respuestaRepository.save(new Respuesta(datosRegistroRespuesta));
+        Boolean topico = topicoRepository.estaDeshabilitado(datosRegistroRespuesta.idTopico());
 
-        DatosRespuestaRespuesta datosRespuestaRespuesta = new DatosRespuestaRespuesta(respuesta.getId(),
-                respuesta.getMensajeRespuesta(), respuesta.getFechaRespuesta().toString(), respuesta.getIdTopico(),
-                respuesta.getIdAutor());
+        //Si el topico esta dehabilitado este no resibira las respuestas
+        if (topico) {
 
-        URI uri = uriComponentsBuilder.path("/respuesta/{id}").buildAndExpand(respuesta.getId()).toUri();
-        return ResponseEntity.created(uri).body(datosRespuestaRespuesta);
+            Respuesta respuesta = respuestaRepository.save(new Respuesta(datosRegistroRespuesta));
+
+            DatosRespuestaRespuesta datosRespuestaRespuesta = new DatosRespuestaRespuesta(respuesta.getId(),
+                    respuesta.getMensajeRespuesta(), respuesta.getFechaRespuesta().toString(), respuesta.getIdTopico(),
+                    respuesta.getIdAutor());
+
+            URI uri = uriComponentsBuilder.path("/respuesta/{id}").buildAndExpand(respuesta.getId()).toUri();
+            return ResponseEntity.created(uri).body(datosRespuestaRespuesta);
+
+        } else {
+
+            return ResponseEntity.badRequest().body("El topico esta deshabilitado");
+
+        }
 
 
     }
@@ -62,6 +85,7 @@ public class RespuestaController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "Modifica una respuesta por el id")
     public ResponseEntity modificarRepsuesta(@RequestBody @Valid DatosActualizarRespuesta datosActualizarRespuesta) {
 
         Respuesta respuesta = respuestaRepository.getReferenceById(datosActualizarRespuesta.id());
@@ -79,7 +103,8 @@ public class RespuestaController {
 
     @DeleteMapping("/eliminar/{id}")
     @Transactional
-    public ResponseEntity eliminarRespuesta(@PathVariable long id){
+    @Operation(summary = "Elimina una respuesta")
+    public ResponseEntity eliminarRespuesta(@PathVariable long id) {
 
         respuestaRepository.deleteById(id);
 
