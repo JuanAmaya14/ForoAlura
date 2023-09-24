@@ -11,7 +11,7 @@ public record DatosRegistroTopico (
         @NotBlank(message = "El mensaje no puede estar vacio")
         String mensaje,
 
-        @NotBlank
+        @NotNull
         long autor,
 
         @NotBlank(message = "El curso no puede estar vacio")

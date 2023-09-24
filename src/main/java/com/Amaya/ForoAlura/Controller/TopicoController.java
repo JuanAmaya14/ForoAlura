@@ -2,7 +2,6 @@ package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.RespuestaRepository;
 import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
-import com.Amaya.ForoAlura.domain.Respuestas.DatosListadoRespuesta;
 import com.Amaya.ForoAlura.domain.Respuestas.Respuesta;
 import com.Amaya.ForoAlura.domain.Topico.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,16 +37,11 @@ public class TopicoController {
     public ResponseEntity RegistrarTopico(@RequestBody @Valid DatosRegistroTopico datosRegistroTopico,
                                           UriComponentsBuilder uriComponentsBuilder) {
 
-        String titulo = topicoRepository.SeleccionarPorTitulo(datosRegistroTopico.titulo());
-
-        String mensaje = topicoRepository.SeleccionarPorMensaje(datosRegistroTopico.mensaje());
+        String idTopico = topicoRepository.SeleccionarIdPorTituloYMensaje(datosRegistroTopico.titulo(),
+                datosRegistroTopico.mensaje());
 
         //No permite el mismo titulo y el mismo mensaje de otro topico ya existente
-        if (datosRegistroTopico.titulo().equals(titulo) && datosRegistroTopico.mensaje().equals(mensaje)) {
-
-            return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, por favor modificalo");
-
-        } else {
+        if (idTopico == null) {
 
             Topico topico = topicoRepository.save(new Topico(datosRegistroTopico));
 
@@ -57,6 +51,11 @@ public class TopicoController {
 
             URI uri = uriComponentsBuilder.path("/topico/{id}").buildAndExpand(topico.getId()).toUri();
             return ResponseEntity.created(uri).body(datosRespuestaTopico);
+
+        } else {
+
+            return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, por favor modificalo");
+
         }
     }
 
@@ -89,13 +88,12 @@ public class TopicoController {
     @Operation(summary = "Modifica un topico")
     public ResponseEntity ActualizarTopico(@RequestBody @Valid DatosActualizarTopico datosActualizarTopico) {
 
-        String titulo = topicoRepository.SeleccionarPorTitulo(datosActualizarTopico.titulo());
-
-        String mensaje = topicoRepository.SeleccionarPorMensaje(datosActualizarTopico.mensaje());
+        String idTopico = topicoRepository.SeleccionarIdPorTituloYMensaje(datosActualizarTopico.titulo(),
+                datosActualizarTopico.mensaje());
 
         //No permite el mismo titulo y el mismo mensaje de otro topico ya existente
-        if ( datosActualizarTopico.titulo() != null && datosActualizarTopico.mensaje() != null &&
-                datosActualizarTopico.titulo().equals(titulo) && datosActualizarTopico.mensaje().equals(mensaje)) {
+        if (datosActualizarTopico.titulo() != null && datosActualizarTopico.mensaje() != null &&
+                idTopico != null) {
 
             return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, " +
                     "por favor modificalo");
@@ -117,7 +115,7 @@ public class TopicoController {
     @DeleteMapping("/{id}")
     @Transactional
     @Operation(summary = "Elimina un topico")
-    public ResponseEntity EliminarTopico(@PathVariable long id){
+    public ResponseEntity EliminarTopico(@PathVariable long id) {
 
         topicoRepository.deleteById(id);
 
@@ -129,7 +127,7 @@ public class TopicoController {
     @PutMapping("/deshabilitar/{id}")
     @Transactional
     @Operation(summary = "Deshabilitar un topico")
-    public ResponseEntity deshabilitarTopico(@PathVariable long id){
+    public ResponseEntity deshabilitarTopico(@PathVariable long id) {
 
         Topico topico = topicoRepository.getReferenceById(id);
 

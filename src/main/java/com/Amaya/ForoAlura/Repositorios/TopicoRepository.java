@@ -10,14 +10,10 @@ import org.springframework.stereotype.Repository;
 public interface TopicoRepository extends JpaRepository<Topico, Long> {
 
     @Query("""
-            select t.titulo from Topico t where t.titulo=:titulo
+            select t.id from Topico t where t.titulo = :titulo and t.mensaje = :mensaje
             """)
-    String SeleccionarPorTitulo(String titulo);
+    String SeleccionarIdPorTituloYMensaje(String titulo, String mensaje);
 
-    @Query("""
-            select m.mensaje from Topico m where m.mensaje=:mensaje
-            """)
-    String SeleccionarPorMensaje(String mensaje);
 
     @Query("""
             select e.estatus from Topico e where e.id=:idTopico
