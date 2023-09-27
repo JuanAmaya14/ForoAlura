@@ -36,7 +36,7 @@ public class AutenticacionController {
 
         Boolean usuarioBaneado = usuarioRepository.usuarioBaneadoPorCorreo(datosAutenticacionUsuario.correo());
         //Si el usuario esta baneado no puede hacer el Login
-        if(!usuarioBaneado){
+        if (!usuarioBaneado) {
 
             Authentication authToken = new UsernamePasswordAuthenticationToken(datosAutenticacionUsuario.correo(),
                     datosAutenticacionUsuario.contrasenha());

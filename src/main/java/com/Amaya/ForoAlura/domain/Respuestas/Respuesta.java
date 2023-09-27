@@ -1,7 +1,10 @@
 package com.Amaya.ForoAlura.domain.Respuestas;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.util.Date;
@@ -38,7 +41,7 @@ public class Respuesta {
 
     public void modificarRespuesta(DatosActualizarRespuesta datosActualizarRespuesta) {
 
-        if(datosActualizarRespuesta.mensajeRespuesta() != null){
+        if (datosActualizarRespuesta.mensajeRespuesta() != null) {
 
             this.mensajeRespuesta = datosActualizarRespuesta.mensajeRespuesta();
 

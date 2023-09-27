@@ -1,9 +1,7 @@
 package com.Amaya.ForoAlura.infra.Errores;
 
-import com.fasterxml.jackson.databind.exc.InvalidDefinitionException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
-import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +21,7 @@ public class Errores {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity badRequestModificarCorreo(ConstraintViolationException  e){
+    public ResponseEntity badRequestModificarCorreo(ConstraintViolationException e) {
 
         return ResponseEntity.badRequest().body(e.getConstraintViolations().toString());
 

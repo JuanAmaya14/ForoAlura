@@ -9,10 +9,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-
 //Genera el token
 @Service
 public class TokenService {
@@ -28,7 +24,7 @@ public class TokenService {
                     .withSubject(usuario.getCorreo())
                     .withClaim("id", usuario.getId())
                     .sign(algorithm);
-        } catch (JWTCreationException exception){
+        } catch (JWTCreationException exception) {
             throw new RuntimeException();
         }
     }

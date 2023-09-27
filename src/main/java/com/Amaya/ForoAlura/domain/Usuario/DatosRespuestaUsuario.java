@@ -1,8 +1,6 @@
 package com.Amaya.ForoAlura.domain.Usuario;
 
-import java.util.Date;
-
-public record DatosRespuestaUsuario (
+public record DatosRespuestaUsuario(
 
         long id,
 
