@@ -1,4 +1,4 @@
-package com.Amaya.ForoAlura.domain.Respuestas;
+package com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta;
 
 public record DatosRespuestaRespuesta(
         long id,

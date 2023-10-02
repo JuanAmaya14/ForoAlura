@@ -2,8 +2,13 @@ package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.RespuestaRepository;
 import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
+import com.Amaya.ForoAlura.Repositorios.UsuarioRepository;
 import com.Amaya.ForoAlura.domain.Respuestas.Respuesta;
-import com.Amaya.ForoAlura.domain.Topico.*;
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosActualizarTopico;
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosListadoTopico;
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosRegistroTopico;
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosRespuestaTopico;
+import com.Amaya.ForoAlura.domain.Topico.Topico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -11,6 +16,9 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -30,6 +38,9 @@ public class TopicoController {
     @Autowired
     private RespuestaRepository respuestaRepository;
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
 
     @PostMapping
     @Transactional
@@ -40,10 +51,17 @@ public class TopicoController {
         String idTopico = topicoRepository.SeleccionarIdPorTituloYMensaje(datosRegistroTopico.titulo(),
                 datosRegistroTopico.mensaje());
 
+        Authentication auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        UserDetails userDetail = (UserDetails) auth.getPrincipal();
+        long idUsuario = usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
+
         //No permite el mismo titulo y el mismo mensaje de otro topico ya existente
         if (idTopico == null) {
 
-            Topico topico = topicoRepository.save(new Topico(datosRegistroTopico));
+            Topico topico = topicoRepository.save(new Topico(datosRegistroTopico, idUsuario));
 
             DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico.getId(), topico.getTitulo(),
                     topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(),

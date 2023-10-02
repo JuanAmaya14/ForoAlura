@@ -1,5 +1,7 @@
 package com.Amaya.ForoAlura.domain.Usuario;
 
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosActualizarUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosRegistroUsuario;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;

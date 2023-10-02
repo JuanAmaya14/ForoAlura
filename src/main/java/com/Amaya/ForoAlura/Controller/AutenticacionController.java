@@ -1,7 +1,7 @@
 package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.UsuarioRepository;
-import com.Amaya.ForoAlura.domain.Usuario.DatosAutenticacionUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosAutenticacionUsuario;
 import com.Amaya.ForoAlura.domain.Usuario.Usuario;
 import com.Amaya.ForoAlura.infra.Seguridad.DatosJWTToken;
 import com.Amaya.ForoAlura.infra.Seguridad.TokenService;

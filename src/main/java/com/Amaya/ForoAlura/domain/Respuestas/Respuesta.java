@@ -1,5 +1,7 @@
 package com.Amaya.ForoAlura.domain.Respuestas;
 
+import com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta.DatosActualizarRespuesta;
+import com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta.DatosRegistroRespuesta;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -30,12 +32,12 @@ public class Respuesta {
 
     private long idAutor;
 
-    public Respuesta(DatosRegistroRespuesta datosRegistroRespuesta) {
+    public Respuesta(DatosRegistroRespuesta datosRegistroRespuesta, long idUsuario) {
 
         this.mensajeRespuesta = datosRegistroRespuesta.mensajeRespuesta();
         this.fechaRespuesta = Date.from(Instant.now());
         this.idTopico = datosRegistroRespuesta.idTopico();
-        this.idAutor = datosRegistroRespuesta.idAutor();
+        this.idAutor = idUsuario;
 
     }
 

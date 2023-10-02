@@ -20,4 +20,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
             select b.baneado from Usuario b where b.id=:id
             """)
     Boolean usuarioBaneadoPorId(long id);
+
+
+    @Query("""
+            select c.id from Usuario c where c.correo=:correo
+            """)
+    long getIdUsuarioByCorreo(String correo);
 }

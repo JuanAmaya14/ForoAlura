@@ -1,7 +1,11 @@
 package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.UsuarioRepository;
-import com.Amaya.ForoAlura.domain.Usuario.*;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosActualizarUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosListadoUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosRegistroUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosRespuestaUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;

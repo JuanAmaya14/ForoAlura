@@ -1,4 +1,4 @@
-package com.Amaya.ForoAlura.domain.Topico;
+package com.Amaya.ForoAlura.domain.Topico.DatosTopico;
 
 import com.Amaya.ForoAlura.domain.Respuestas.Respuesta;
 

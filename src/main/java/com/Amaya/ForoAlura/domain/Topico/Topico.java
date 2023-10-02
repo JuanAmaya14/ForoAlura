@@ -1,5 +1,7 @@
 package com.Amaya.ForoAlura.domain.Topico;
 
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosActualizarTopico;
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosRegistroTopico;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -33,12 +35,12 @@ public class Topico {
 
     private String curso;
 
-    public Topico(DatosRegistroTopico datosRegistroTopico) {
+    public Topico(DatosRegistroTopico datosRegistroTopico, long idUsuario) {
         this.titulo = datosRegistroTopico.titulo();
         this.mensaje = datosRegistroTopico.mensaje();
         this.fechaCreacion = Date.from(Instant.now());
         this.estatus = true;
-        this.autor = datosRegistroTopico.autor();
+        this.autor = idUsuario;
         this.curso = datosRegistroTopico.curso();
     }
 

@@ -1,4 +1,4 @@
-package com.Amaya.ForoAlura.domain.Respuestas;
+package com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +9,5 @@ public record DatosRegistroRespuesta(
         String mensajeRespuesta,
 
         @NotNull
-        long idTopico,
-
-        @NotNull
-        long idAutor) {
+        long idTopico) {
 }

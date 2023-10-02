@@ -1,4 +1,4 @@
-package com.Amaya.ForoAlura.domain.Usuario;
+package com.Amaya.ForoAlura.domain.Usuario.DatosUsuario;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

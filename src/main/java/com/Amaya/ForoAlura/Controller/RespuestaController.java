@@ -2,7 +2,12 @@ package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.RespuestaRepository;
 import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
-import com.Amaya.ForoAlura.domain.Respuestas.*;
+import com.Amaya.ForoAlura.Repositorios.UsuarioRepository;
+import com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta.DatosActualizarRespuesta;
+import com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta.DatosListadoRespuesta;
+import com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta.DatosRegistroRespuesta;
+import com.Amaya.ForoAlura.domain.Respuestas.DatosRespuesta.DatosRespuestaRespuesta;
+import com.Amaya.ForoAlura.domain.Respuestas.Respuesta;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,6 +15,9 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,6 +35,9 @@ public class RespuestaController {
 
     @Autowired
     private TopicoRepository topicoRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @GetMapping
     @Operation(summary = "Devuelve todas las respuestas que existen")
@@ -61,10 +72,17 @@ public class RespuestaController {
 
         Boolean topico = topicoRepository.estaDeshabilitado(datosRegistroRespuesta.idTopico());
 
+        Authentication auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        UserDetails userDetail = (UserDetails) auth.getPrincipal();
+        long idUsuario = usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
+
         //Si el topico esta dehabilitado este no resibira las respuestas
         if (topico) {
 
-            Respuesta respuesta = respuestaRepository.save(new Respuesta(datosRegistroRespuesta));
+            Respuesta respuesta = respuestaRepository.save(new Respuesta(datosRegistroRespuesta, idUsuario));
 
             DatosRespuestaRespuesta datosRespuestaRespuesta = new DatosRespuestaRespuesta(respuesta.getId(),
                     respuesta.getMensajeRespuesta(), respuesta.getFechaRespuesta().toString(), respuesta.getIdTopico(),
