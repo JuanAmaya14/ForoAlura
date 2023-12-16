@@ -1,13 +1,8 @@
 package com.Amaya.ForoAlura.Controller;
 
-import com.Amaya.ForoAlura.Repositorios.RespuestaRepository;
-import com.Amaya.ForoAlura.Repositorios.TopicoRepository;
-import com.Amaya.ForoAlura.Repositorios.UsuarioRepository;
+import com.Amaya.ForoAlura.Repositorios.*;
 import com.Amaya.ForoAlura.domain.Respuestas.Respuesta;
-import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosActualizarTopico;
-import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosListadoTopico;
-import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosRegistroTopico;
-import com.Amaya.ForoAlura.domain.Topico.DatosTopico.DatosRespuestaTopico;
+import com.Amaya.ForoAlura.domain.Topico.DatosTopico.*;
 import com.Amaya.ForoAlura.domain.Topico.Topico;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

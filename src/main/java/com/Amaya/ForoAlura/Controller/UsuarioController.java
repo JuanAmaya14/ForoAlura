@@ -1,10 +1,7 @@
 package com.Amaya.ForoAlura.Controller;
 
 import com.Amaya.ForoAlura.Repositorios.UsuarioRepository;
-import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosActualizarUsuario;
-import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosListadoUsuario;
-import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosRegistroUsuario;
-import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.DatosRespuestaUsuario;
+import com.Amaya.ForoAlura.domain.Usuario.DatosUsuario.*;
 import com.Amaya.ForoAlura.domain.Usuario.Usuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -23,7 +20,6 @@ import java.net.URI;
 @RestController
 @RequestMapping("/usuario")
 @EnableWebSecurity
-@SecurityRequirement(name = "bearer-key")
 @Tag(name = "Usuario")
 public class UsuarioController {
 
@@ -53,7 +49,7 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @Operation(summary = "Devuelve todos los usuarios existentes")
+    @Operation(summary = "Devuelve todos los usuarios existentes", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity ListarUsuarios() {
 
         return ResponseEntity.ok(usuarioRepository.findAll());
@@ -62,7 +58,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Devuelve un usuario por el id")
+    @Operation(summary = "Devuelve un usuario por el id", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity<DatosListadoUsuario> ListarUsuarioPorId(@PathVariable long id) {
 
         Usuario usuario = usuarioRepository.getReferenceById(id);
@@ -76,7 +72,7 @@ public class UsuarioController {
 
     @PutMapping("/actualizar")
     @Transactional
-    @Operation(summary = "Modifica un usuario")
+    @Operation(summary = "Modifica un usuario", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity modificarUsuario(@RequestBody DatosActualizarUsuario datosActualizarUsuario) {
 
         Usuario usuario = usuarioRepository.getReferenceById(datosActualizarUsuario.id());
@@ -96,7 +92,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    @Operation(summary = "Elimina un usuario")
+    @Operation(summary = "Elimina un usuario", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity eliminarUsuario(@PathVariable long id) {
 
         usuarioRepository.deleteById(id);
@@ -107,7 +103,8 @@ public class UsuarioController {
 
     @DeleteMapping("/banear/{id}")
     @Transactional
-    @Operation(summary = "Banea a un usuario (deshabilitar la cuenta)")
+    @Operation(summary = "Banea a un usuario (deshabilitar la cuenta)",
+            security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity BanearUsuario(@PathVariable long id) {
 
 
@@ -133,7 +130,8 @@ public class UsuarioController {
 
     @PutMapping("/desbanear/{id}")
     @Transactional
-    @Operation(summary = "Desbanea a un usuario (habilitar la cuenta)")
+    @Operation(summary = "Desbanea a un usuario (habilitar la cuenta)",
+            security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity DesbanearUsuario(@PathVariable long id) {
 
         Boolean usuarioBaneado = usuarioRepository.usuarioBaneadoPorId(id);
