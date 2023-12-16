@@ -28,4 +28,9 @@ public interface RespuestaRepository extends JpaRepository<Respuesta, Long> {
             select u.nombre from Usuario u where u.id = :idAutor
             """)
     String autorRespuestaPorId(long idAutor);
+
+    @Query("""
+            select a.idAutor from Respuesta a where a.id=:id
+            """)
+    long seleccionarAutorDeRespuesta(long id);
 }

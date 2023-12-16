@@ -43,7 +43,7 @@ public class RespuestaController {
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "Devuelve una respeusta por el id")
+    @Operation(summary = "Devuelve una respuesta por el id")
     public ResponseEntity<DatosListadoRespuesta> listarRespuestas(@PathVariable long id) {
 
         Respuesta respuesta = respuestaRepository.getReferenceById(id);
@@ -67,12 +67,7 @@ public class RespuestaController {
 
         Boolean topico = topicoRepository.estaDeshabilitado(datosRegistroRespuesta.idTopico());
 
-        Authentication auth = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-
-        UserDetails userDetail = (UserDetails) auth.getPrincipal();
-        long idUsuario = usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
+        long idUsuario = UsuarioLogeado();
 
         //Si el topico esta dehabilitado este no resibira las respuestas
         if (topico) {
@@ -103,14 +98,24 @@ public class RespuestaController {
 
         Respuesta respuesta = respuestaRepository.getReferenceById(datosActualizarRespuesta.id());
 
-        respuesta.modificarRespuesta(datosActualizarRespuesta);
+        long idUsuario = UsuarioLogeado();
 
-        DatosRespuestaRespuesta datosRespuestaRespuesta = new DatosRespuestaRespuesta(respuesta.getId(),
-                respuesta.getMensajeRespuesta(), respuesta.getFechaRespuesta().toString(), respuesta.getIdTopico(),
-                respuesta.getIdAutor());
+        if (idUsuario == respuesta.getIdAutor()) {
+
+            respuesta.modificarRespuesta(datosActualizarRespuesta);
+
+            DatosRespuestaRespuesta datosRespuestaRespuesta = new DatosRespuestaRespuesta(respuesta.getId(),
+                    respuesta.getMensajeRespuesta(), respuesta.getFechaRespuesta().toString(), respuesta.getIdTopico(),
+                    respuesta.getIdAutor());
 
 
-        return ResponseEntity.ok(datosRespuestaRespuesta);
+            return ResponseEntity.ok(datosRespuestaRespuesta);
+
+        } else {
+
+            return ResponseEntity.badRequest().body("No puedes modificar la respuesta de alguien mas");
+
+        }
 
     }
 
@@ -119,9 +124,31 @@ public class RespuestaController {
     @Operation(summary = "Elimina una respuesta")
     public ResponseEntity eliminarRespuesta(@PathVariable long id) {
 
-        respuestaRepository.deleteById(id);
+        long idAutorRespuesta = respuestaRepository.seleccionarAutorDeRespuesta(id);
 
-        return ResponseEntity.ok("La respuesta con el id " + id + " fue eliminado con exito");
+        long idUsuario = UsuarioLogeado();
+
+        if (idUsuario == idAutorRespuesta) {
+
+            respuestaRepository.deleteById(id);
+
+            return ResponseEntity.ok("La respuesta con el id " + id + " fue eliminado con exito");
+
+        } else {
+
+            return ResponseEntity.badRequest().body("No puedes borrar la respuesta de alguien mas");
+
+        }
+
+    }
+
+    public long UsuarioLogeado() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails userDetail = (UserDetails) auth.getPrincipal();
+
+        return usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
 
     }
 

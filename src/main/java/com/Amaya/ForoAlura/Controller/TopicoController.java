@@ -46,12 +46,7 @@ public class TopicoController {
         String idTopico = topicoRepository.SeleccionarIdPorTituloYMensaje(datosRegistroTopico.titulo(),
                 datosRegistroTopico.mensaje());
 
-        Authentication auth = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-
-        UserDetails userDetail = (UserDetails) auth.getPrincipal();
-        long idUsuario = usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
+        long idUsuario = UsuarioLogeado();
 
         //No permite el mismo titulo y el mismo mensaje de otro topico ya existente
         if (idTopico == null) {
@@ -104,25 +99,32 @@ public class TopicoController {
         String idTopico = topicoRepository.SeleccionarIdPorTituloYMensaje(datosActualizarTopico.titulo(),
                 datosActualizarTopico.mensaje());
 
-        //No permite el mismo titulo y el mismo mensaje de otro topico ya existente
-        if (datosActualizarTopico.titulo() != null && datosActualizarTopico.mensaje() != null &&
-                idTopico != null) {
+        Topico topico = topicoRepository.getReferenceById(datosActualizarTopico.id());
 
-            return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, " +
-                    "por favor modificalo");
+        long idUsuario = UsuarioLogeado();
+
+        if (idUsuario == topico.getAutor()) {
+
+            //No permite el mismo titulo y el mismo mensaje de otro topico ya existente
+            if (idTopico != null) {
+
+                return ResponseEntity.badRequest().body(" El titulo y el mensaje es el mismo que otro post, " + "por favor modificalo");
+
+            } else {
+
+                topico.actualizarDatos(datosActualizarTopico);
+
+                DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico.getId(), topico.getTitulo(), topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(), topico.getCurso());
+
+                return ResponseEntity.ok(datosRespuestaTopico);
+            }
 
         } else {
 
-            Topico topico = topicoRepository.getReferenceById(datosActualizarTopico.id());
+            return ResponseEntity.badRequest().body("No puedes modificar el topico de alguien más");
 
-            topico.actualizarDatos(datosActualizarTopico);
-
-            DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(topico.getId(), topico.getTitulo(),
-                    topico.getMensaje(), topico.getFechaCreacion().toString(), topico.getEstatus(), topico.getAutor(),
-                    topico.getCurso());
-
-            return ResponseEntity.ok(datosRespuestaTopico);
         }
+
     }
 
     @DeleteMapping("/{id}")
@@ -130,9 +132,21 @@ public class TopicoController {
     @Operation(summary = "Elimina un topico")
     public ResponseEntity EliminarTopico(@PathVariable long id) {
 
-        topicoRepository.deleteById(id);
+        long idAutorTopico = topicoRepository.seleccionarAutorDeTopico(id);
 
-        return ResponseEntity.ok("El topico con el id: " + id + " fue eliminado");
+        long idUsuario = UsuarioLogeado();
+
+        if (idUsuario == idAutorTopico) {
+
+            topicoRepository.deleteById(id);
+
+            return ResponseEntity.ok("El topico con el id: " + id + " fue eliminado");
+
+        } else {
+
+            return ResponseEntity.badRequest().body("No puedes borrar el topico de alguien mas");
+
+        }
 
     }
 
@@ -144,9 +158,29 @@ public class TopicoController {
 
         Topico topico = topicoRepository.getReferenceById(id);
 
-        topico.Deshabilitar();
+        long idUsuario = UsuarioLogeado();
 
-        return ResponseEntity.ok("El topico con el id: " + id + " fue deshabilitado");
+        if (idUsuario == topico.getAutor()) {
+
+            topico.Deshabilitar();
+
+            return ResponseEntity.ok("El topico con el id: " + id + " fue deshabilitado");
+
+        } else {
+
+            return ResponseEntity.badRequest().body("No puedes deshabilitar el topico de alguien mas");
+
+        }
+
+    }
+
+    public long UsuarioLogeado() {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        UserDetails userDetail = (UserDetails) auth.getPrincipal();
+
+        return usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
 
     }
 

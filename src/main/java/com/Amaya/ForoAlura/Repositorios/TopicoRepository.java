@@ -19,4 +19,10 @@ public interface TopicoRepository extends JpaRepository<Topico, Long> {
             select e.estatus from Topico e where e.id=:idTopico
             """)
     Boolean estaDeshabilitado(long idTopico);
+
+
+    @Query("""
+            select a.autor from Topico a where a.id=:id
+            """)
+    long seleccionarAutorDeTopico(long id);
 }

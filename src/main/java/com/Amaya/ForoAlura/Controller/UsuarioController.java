@@ -11,6 +11,9 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -77,16 +80,26 @@ public class UsuarioController {
 
         Usuario usuario = usuarioRepository.getReferenceById(datosActualizarUsuario.id());
 
-        //Encripta la contrasenha
-        String contrasenha = passwordEncoder.encode(datosActualizarUsuario.contrasenha());
+        long idUsuario = UsuarioLogeado();
 
-        usuario.modificarDatos(datosActualizarUsuario, contrasenha);
+        if (idUsuario == datosActualizarUsuario.id()) {
 
-        DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario.getId(),
-                usuario.getNombre(), usuario.getCorreo(), usuario.getContrasenha(),
-                usuario.getFechaCreacion().toString(), usuario.getBaneado());
+            //Encripta la contrasenha
+            String contrasenha = passwordEncoder.encode(datosActualizarUsuario.contrasenha());
 
-        return ResponseEntity.ok(datosRespuestaUsuario);
+            usuario.modificarDatos(datosActualizarUsuario, contrasenha);
+
+            DatosRespuestaUsuario datosRespuestaUsuario = new DatosRespuestaUsuario(usuario.getId(),
+                    usuario.getNombre(), usuario.getCorreo(), usuario.getContrasenha(),
+                    usuario.getFechaCreacion().toString(), usuario.getBaneado());
+
+            return ResponseEntity.ok(datosRespuestaUsuario);
+
+        } else {
+
+            return ResponseEntity.badRequest().body("No puedes modificar la cuenta de alguien más");
+
+        }
 
     }
 
@@ -95,9 +108,19 @@ public class UsuarioController {
     @Operation(summary = "Elimina un usuario", security = @SecurityRequirement(name = "bearer-key"))
     public ResponseEntity eliminarUsuario(@PathVariable long id) {
 
-        usuarioRepository.deleteById(id);
+        long idUsuario = UsuarioLogeado();
 
-        return ResponseEntity.ok().build();
+        if (idUsuario == id) {
+
+            usuarioRepository.deleteById(id);
+
+            return ResponseEntity.ok().build();
+
+        } else {
+
+            return ResponseEntity.badRequest().body("No puedes borrar la cuenta de alguien más");
+
+        }
 
     }
 
@@ -151,6 +174,18 @@ public class UsuarioController {
             return ResponseEntity.badRequest().body("El usuario no esta baneado");
 
         }
+
+    }
+
+    public long UsuarioLogeado() {
+
+        Authentication auth = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+
+        UserDetails userDetail = (UserDetails) auth.getPrincipal();
+
+        return usuarioRepository.getIdUsuarioByCorreo(userDetail.getUsername());
 
     }
 

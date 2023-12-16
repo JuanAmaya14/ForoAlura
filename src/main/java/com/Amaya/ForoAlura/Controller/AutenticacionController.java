@@ -35,6 +35,7 @@ public class AutenticacionController {
     public ResponseEntity autenticarUsuario(@RequestBody @Valid DatosAutenticacionUsuario datosAutenticacionUsuario) {
 
         Boolean usuarioBaneado = usuarioRepository.usuarioBaneadoPorCorreo(datosAutenticacionUsuario.correo());
+
         //Si el usuario esta baneado no puede hacer el Login
         if (!usuarioBaneado) {
 
@@ -46,7 +47,7 @@ public class AutenticacionController {
 
         } else {
 
-            return ResponseEntity.badRequest().body("El usuario esta baneado");
+            return ResponseEntity.badRequest().body("La cuenta a la que intentas acceder esta baneado del servidor");
 
         }
 
